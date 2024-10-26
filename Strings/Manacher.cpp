@@ -8,12 +8,10 @@
 
 vector<int> manacher(const string &s0){
     string s;
-    for(int i=0; i<s0.size()-1; ++i){
+    for(int i=0; i<(int)s0.size(); ++i){
         s.push_back(s0[i]);
         s.push_back('#');
     }
-    s.push_back(s0.back());
-    
     int n=s.size();
     vector<int> d(n, 1);
     int l=0, r=0;
