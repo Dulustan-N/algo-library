@@ -13,7 +13,7 @@ const int INF = 1e9+10; const ll INF_LL = 2e18; const ld PI = atan2(0,-1);
 #define forr(i,a,b) for(auto i=a; i>b; --i)
 
 #ifdef LOCAL
-    #include "/home/dulustan/disk/projects/LIBR/Debug/debug.hpp"
+    #include "/home/dulustan/disk/projects/algo-library/Debug/debug.hpp"
 #else
     #define deb(...) 0
 #endif
