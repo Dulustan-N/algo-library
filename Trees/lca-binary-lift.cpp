@@ -35,3 +35,8 @@ auto lca = [&](int v, int u)->int{
     return up[v][0];
 };
 
+//find distance between v and u
+auto dist = [&](int v, int u)->int{
+    int l = lca(v, u);
+    return d[v] + d[u] - 2 * d[l];        
+};
