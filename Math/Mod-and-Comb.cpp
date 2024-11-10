@@ -17,6 +17,7 @@ int powm(int a, ll k){
     return res;
 }
 int inv(int a){return powm(a, mod - 2);}
+int divi(int a, int b){return mul(a, inv(b));}
 
 struct Comb{
     vector<int> fac, ifac;
