@@ -12,26 +12,27 @@
  * Complexity: build -> O(n), upd -> O(log n), get -> O(log n), space -> O(n log n).
 */
 
+template<class T>
 struct SegTree{        
-    vector<ll> t;
+    vector<T> t;
     int n;
-    const ll NONE = -INF_LL; 
+    const T NONE = -INF_LL; 
     SegTree(int n) : n(n){t.resize(4*n);}
-    auto comb(ll x, ll y){
+    T comb(T x, T y){
         return max(x, y);
     }
-    void build(int p, int l, int r, const vector<ll> &a){
+    void build(int p, int l, int r, const vector<T> &a){
         if(r-l==1){t[p] = a[l]; return;}
         int m = (l+r)/2;
         build(2*p+1, l, m, a);
         build(2*p+2, m, r, a);
         t[p] = comb(t[2*p+1], t[2*p+2]);
     }
-    void upd(int p, int l, int r, int q, int v){
+    void upd(int p, int l, int r, int q, T v){
         if(r-l==1){t[p] = v; return;}
         int m = (l+r)/2;
-        if(q<m) upd(2*p+1,l,m,q,v);
-        else upd(2*p+2,m,r,q,v);
+        if(q<m) upd(2*p+1, l, m, q, v);
+        else upd(2*p+2, m, r, q, v);
         t[p] = comb(t[2*p+1], t[2*p+2]);
     }
     auto get(int p, int l, int r, int ql, int qr){
@@ -41,7 +42,7 @@ struct SegTree{
         return comb(get(2*p+1, l, m, ql, qr),
                     get(2*p+2, m, r, ql, qr));
     }    
-    void upd(int q, int v){
+    void upd(int q, T v){
         upd(0, 0, n, q, v);
     }
     auto get(int ql, int qr){
@@ -55,9 +56,9 @@ struct SegTree{
  * get_kth(0, 0, n, k) - get kth one in binary array a[0..n-1],
  *      works only for SegTree with sum.
 */
-auto first_above(int p, int l, int r, int q, int v){
-    if(t[p]<v || r<=q) return -1;
-    if(r-l==1) return l;
+int first_above(int p, int l, int r, int q, T v){
+    if(t[p] < v || r <= q) return -1;
+    if(r-l == 1) return l;
     int m = (l+r)/2;
     int x = -1;
     if(t[2*p+1] >= v)
@@ -67,9 +68,9 @@ auto first_above(int p, int l, int r, int q, int v){
     return x;
 }
 
-auto get_kth(int p, int l, int r, int k){
-    if(t[p]<k) return -1;
-    if(r-l==1) return l;
+int get_kth(int p, int l, int r, int k){
+    if(t[p] < k) return -1;
+    if(r-l == 1) return l;
     int m = (l+r)/2;
     if(t[2*p+1] >= k)
         return get_kth(2*p+1, l, m, k);

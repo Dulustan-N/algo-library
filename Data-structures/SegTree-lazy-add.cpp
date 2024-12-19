@@ -15,33 +15,28 @@
  * Complexity: build -> O(n), upd -> O(log n), get -> O(log n), space -> O(n log n).
 */
 
+template <class T>
 struct SegTree{ 
-    vector<ll> t, tl;
+    vector<T> t;
+    vector<T> tl;
     int n;
-    const ll NONE = -INF_LL; 
+    const T NONE = 0;
     SegTree(int n) : n(n){t.resize(4*n); tl.resize(4*n);}
-    auto comb(ll a, ll b){
-        return max(a, b);
+    T comb(T a, T b){
+        return add(a, b);
     }    
-    void apply(int p, int l, int r, ll v){
-        t[p] = v;
-        tl[p] = v;
+    void apply(int p, int l, int r, T v){
+        t[p] = add(t[p], mul(v, r-l));
+        tl[p] = add(tl[p], v);
     }
     void push(int p, int l, int r){
-        if(tl[p] == 0) return;
+        if(tl[p] == NONE) return;
         int m = (l+r)/2;
         apply(2*p+1, l, m, tl[p]);
         apply(2*p+2, m, r, tl[p]);
-        tl[p] = 0;
+        tl[p] = NONE;
     }
-    void build(int p, int l, int r, const vector<ll> &a){
-        if(r-l==1){t[p] = a[l]; return;}
-        int m = (l+r)/2;
-        build(2*p+1, l, m, a);
-        build(2*p+2, m, r, a);
-        t[p] = comb(t[2*p+1], t[2*p+2]);
-    }
-    void upd(int p, int l, int r, int ql, int qr, ll v){
+    void upd(int p, int l, int r, int ql, int qr, T v){
         if(qr<=l || r<=ql) return;
         if(ql<=l && r<=qr){
             apply(p, l, r, v); return; 
@@ -59,7 +54,7 @@ struct SegTree{
         int m = (l+r)/2;
         return comb(get(2*p+1, l, m, ql, qr), get(2*p+2, m, r, ql, qr));
     }   
-    void upd(int ql, int qr, ll v){
+    void upd(int ql, int qr, T v){
         upd(0, 0, n, ql, qr, v);
     }
     auto get(int ql, int qr){

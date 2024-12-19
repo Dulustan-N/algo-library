@@ -9,15 +9,16 @@
  * Complexity: upd -> O(log n), get -> O(log n), space -> O(n log n). 
 */
 
+template <class T>
 struct Fenwick{
-    vector<ll> t;
+    vector<T> t;
     Fenwick(int n){t.resize(n+1);}
-    void upd(int i, ll v){        
-        for(++i; i<t.size(); i+=i&(-i))
+    void upd(int i, T v){        
+        for(++i; i<(int)t.size(); i+=i&(-i))
             t[i] += v;
     }    
     auto get(int i){
-        ll res=0;
+        T res = 0;
         for(++i; i>0; i-=i&(-i))
             res += t[i];
         return res;
@@ -28,11 +29,11 @@ struct Fenwick{
 };
 
 //Binary lifting
-int lower_bound(ll v){
-    ll sum=0; 
-    int pos=0;        
+int lower_bound(T v){
+    T sum = 0; 
+    int pos = 0;        
     for(int i=__lg(t.size()); i>=0; --i){
-        if(pos+(1<<i)<t.size() && sum+t[pos+(1<<i)]<v){
+        if(pos+(1<<i) < t.size() && sum+t[pos+(1<<i)] < v){
             sum += t[pos+(1<<i)];
             pos += (1<<i);
         }

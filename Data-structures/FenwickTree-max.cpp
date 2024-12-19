@@ -10,14 +10,14 @@
 
 template<class T>
 struct Fenwick{
-    vector<ll> t;
+    vector<T> t;
     Fenwick(int n){t.resize(n+1);}
-    void upd(int i, ll v){
+    void upd(int i, T v){
         for(++i; i<t.size(); i+=i&(-i))
             t[i] = max(t[i], v);
     }    
-    ll get(int i){
-        ll res=0;
+    T get(int i){
+        T res=0;
         for(++i; i>0; i-=i&(-i))
             res = max(res, t[i]);
         return res;

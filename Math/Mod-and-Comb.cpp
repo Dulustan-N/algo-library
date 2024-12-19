@@ -1,7 +1,8 @@
 /**
  * Modular arithmetic and combinatorics.
  * Comb class - precomputes factorials and inverse factorials, 
- * comb.bin(a, b) --- choosing b out of a. 
+ * comb.nCr(a, b) --- choosing b out of a. 
+ * comb.nPr(a, b) --- choosing b with order out of a.
 */
 
 // const int mod = 1e9+7;
@@ -18,6 +19,11 @@ int powm(int a, ll k){
 }
 int inv(int a){return powm(a, mod - 2);}
 int divi(int a, int b){return mul(a, inv(b));}
+void chadd(int &a, int b){a = add(a, b);}
+void chsub(int &a, int b){a = sub(a, b);}
+void chmul(int &a, int b){a = mul(a, b);}
+void chdivi(int &a, int b){a = divi(a, b);}
+
 
 struct Comb{
     vector<int> fac, ifac;

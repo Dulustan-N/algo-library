@@ -13,17 +13,18 @@
  * Complexity: build -> O(n), upd -> O(log n), get -> O(log n), space -> O(n log n).
 */
 
+template <class T>
 struct SegTree{
-    vector<ll> t;
+    vector<T> t;
     vector<pair<int,int>> ch;
     int n;
-    const ll NONE = 0; 
+    const T NONE = 0; 
     SegTree(int n) : n(n){
         //t.reserve(1e7); ch.reserve(1e7);
         t.push_back(NONE);
         ch.push_back({-1,-1});  
     }
-    auto comb(ll x, ll y){
+    T comb(T x, T y){
         return max(x, y);
     }
     void extend(int p){
@@ -38,7 +39,7 @@ struct SegTree{
             ch.push_back({-1,-1});            
         }
     }
-    void upd(int p, int l, int r, int q, int v){
+    void upd(int p, int l, int r, int q, T v){
         if(r-l==1){t[p] += v; return;}
         extend(p);
         int m = (l+r)/2;
@@ -48,18 +49,18 @@ struct SegTree{
             upd(ch[p].second, m, r, q, v);
         t[p] = comb(t[ch[p].first], t[ch[p].second]);
     }
-    auto get(int p, int l, int r, int ql, int qr){
+    T get(int p, int l, int r, int ql, int qr){
         if(l>=qr || ql>=r) return NONE;
         if(ql<=l && r<=qr) return t[p];
         extend(p);
-        int m=(l+r)/2;
+        int m = (l+r)/2;
         return comb(get(ch[p].first, l, m, ql, qr),
                     get(ch[p].second, m, r, ql, qr));
     }    
-    auto upd(int q, int v){
+    auto upd(int q, T v){
         return upd(0, 0, n, q, v);
     }
-    auto get(int ql, int qr){
+    T get(int ql, int qr){
         return get(0, 0, n, ql, qr);
     }
 };

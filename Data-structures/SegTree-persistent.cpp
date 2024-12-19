@@ -14,18 +14,19 @@
  * Complexity: build -> O(n), upd -> O(log n), get -> O(log n), space -> O(n log n).
 */
 
+template<class T>
 struct SegTree{
-    vector<ll> t;
+    vector<T> t;
     vector<pair<int,int>> ch;
     int n;
-    const ll NONE = 0; 
+    const T NONE = 0; 
     SegTree(int n) : n(n){
         //t.reserve(1e7); ch.reserve(1e7);
     }
-    auto comb(ll x, ll y){
+    T comb(T x, T y){
         return max(x, y);
     }
-    int build(int l, int r, const vector<ll> &a){
+    int build(int l, int r, const vector<T> &a){
         int p = t.size();
         t.push_back(a[l]);
         ch.push_back({-1,-1});
@@ -36,7 +37,7 @@ struct SegTree{
         t[p] = comb(t[ch[p].first], t[ch[p].second]);
         return p;
     }
-    int upd(int p, int l, int r, int q, int v){
+    int upd(int p, int l, int r, int q, T v){
         int np = t.size();
         t.push_back(t[p]);
         ch.push_back(ch[p]);
@@ -49,17 +50,17 @@ struct SegTree{
         t[np] = comb(t[ch[np].first], t[ch[np].second]);
         return np;
     }
-    auto get(int p, int l, int r, int ql, int qr){
-        if(l>=qr || ql>=r) return NONE;
-        if(ql<=l && r<=qr) return t[p];
-        int m=(l+r)/2;
+    T get(int p, int l, int r, int ql, int qr){
+        if(l >= qr || ql >= r) return NONE;
+        if(ql <= l && r <= qr) return t[p];
+        int m = (l+r)/2;
         return comb(get(ch[p].first, l, m, ql, qr),
                     get(ch[p].second, m, r, ql, qr));
     }    
-    auto upd(int p, int q, int v){
+    int upd(int p, int q, T v){
         return upd(p, 0, n, q, v);
     }
-    auto get(int p, int ql, int qr){
+    T get(int p, int ql, int qr){
         return get(p, 0, n, ql, qr);
     }
 };

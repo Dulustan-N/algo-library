@@ -13,28 +13,29 @@
  * Complexity: build -> O(n), upd -> O(log n), get -> O(log n), space -> O(n log n).
 */
 
+template <class T>
 struct SegTree{
-    vector<ll> t;
+    vector<T> t;
     int n;
-    const ll NONE = -INF_LL;
+    const T NONE = -INF_LL;
     SegTree(int n) : n(n){t.resize(2*n);}
-    auto comb(ll x, ll y){
+    T comb(T x, T y){
         return max(x, y);
     }
-    void build(const vector<ll> &a){
+    void build(const vector<T> &a){
         for(int i=0; i<n; ++i)
             t[i+n] = a[i];
         for(int p=n-1; p>0; --p)
             t[p] = comb(t[2*p], t[2*p+1]); 
     }
-    void upd(int p, ll v){
+    void upd(int p, T v){
         p += n;
         t[p] = v;
         for(p/=2; p>0; p/=2)
             t[p] = comb(t[2*p], t[2*p+1]);
     }
     auto get(int l, int r){
-        ll res = NONE;        
+        T res = NONE;        
         for(l+=n, r+=n; l<r; l/=2, r/=2){
             if(l&1) res = comb(res, t[l++]);
             if(r&1) res = comb(res, t[--r]);
@@ -47,8 +48,8 @@ struct SegTree{
  * if operation is non-commutative (comb(x,y) != comb(y,x))
  * then get() needs to be modified.
 */
-auto get(int l, int r){
-    ll resl = NONE, resr = NONE;        
+T get(int l, int r){
+    T resl = NONE, resr = NONE;        
     for(l+=n, r+=n; l<r; l/=2, r/=2){
         if(l&1) resl = comb(resl, t[l++]);
         if(r&1) resr = comb(t[--r], resr);
