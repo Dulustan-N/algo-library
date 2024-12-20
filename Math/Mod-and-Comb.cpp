@@ -5,24 +5,24 @@
  * comb.nPr(a, b) --- choosing b with order out of a.
 */
 
-// const int mod = 1e9+7;
-const int mod = 998244353;
+// const int MOD = 1e9+7;
+const int MOD = 998244353;
 
-int add(int a, int b){return a + b >= mod ? a + b - mod : a + b;}
-int sub(int a, int b){return a - b < 0 ? a - b + mod : a - b;}
-int mul(int a, int b){return (ll)a * b >= mod ? (ll)a * b % mod : a * b;}
-int powm(int a, ll k){
+int add(int a, int b, int mod = MOD){return a + b >= mod ? a + b - mod : a + b;}
+int sub(int a, int b, int mod = MOD){return a - b < 0 ? a - b + mod : a - b;}
+int mul(int a, int b, int mod = MOD){return (ll)a * b >= mod ? (ll)a * b % mod : a * b;}
+int powm(int a, ll k, int mod = MOD){
     int res = 1;
     for(; k; k >>= 1, a = mul(a, a))
         if(k & 1) res = mul(res, a);
     return res;
 }
-int inv(int a){return powm(a, mod - 2);}
-int divi(int a, int b){return mul(a, inv(b));}
-void chadd(int &a, int b){a = add(a, b);}
-void chsub(int &a, int b){a = sub(a, b);}
-void chmul(int &a, int b){a = mul(a, b);}
-void chdivi(int &a, int b){a = divi(a, b);}
+int inv(int a, int mod = MOD){return powm(a, mod - 2);}
+int divi(int a, int b, int mod = MOD){return mul(a, inv(b, mod));}
+void chadd(int &a, int b, int mod = MOD){a = add(a, b, mod);}
+void chsub(int &a, int b, int mod = MOD){a = sub(a, b, mod);}
+void chmul(int &a, int b, int mod = MOD){a = mul(a, b, mod);}
+void chdivi(int &a, int b, int mod = MOD){a = divi(a, b, mod);}
 
 
 struct Comb{

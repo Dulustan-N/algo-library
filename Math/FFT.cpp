@@ -2,56 +2,49 @@
  * O(n log n) Fast Fourier Transformation
  * c = conv(a, b) - convolution of a and b:
  * c[i] = a[0]*b[i] + a[1]*b[i-1] + ... + a[i]*b[0].
- * a.size = n, b.size = m.
+ * a.size = n, b.size = m, c.size = n + m - 1
  * Complexity: time -> O(n+m), space -> O((n+m) log(n+m)).
 */
 
+using cd = complex<double>;
 const double PI = acos(-1);
-struct base{
-    double a, b;
-    base(double a = 0, double b = 0) : a(a), b(b) {}
-    const base operator + (const base &c) const
-    {return base(a + c.a, b + c.b);}
-    const base operator - (const base &c) const
-    {return base(a - c.a, b - c.b);}
-    const base operator * (const base &c) const
-    {return base(a * c.a - b * c.b, a * c.b + b * c.a);}
-};
-
-void fft(vector<base> &a, bool inv = 0){
-    int n = a.size(), i = 0;
-    for(int j = 1; j < n - 1; ++j) {
-        for(int k = n >> 1; k > (i ^= k); k >>= 1);
-        if(j<i) swap(a[i], a[j]);
+ 
+void fft(vector<cd> & a, bool inv = 0){
+    int n = a.size();
+    for(int i=1, j=0; i<n; ++i){
+        int bit = n >> 1;
+        for(; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if(i < j) swap(a[i], a[j]);
     }
-    for(int l=1, m; (m=l<<1)<=n; l<<=1){
-        double ang = 2 * PI / m;
-        base wn = base(cos(ang), (inv ? 1. : -1.) * sin(ang)), w;
-        for(int i=0,j,k; i<n; i+=m){
-            for(w=base(1, 0), j=i, k=i+l; j<k; ++j, w=w*wn){
-                base t = w * a[j+l];
-                a[j+l] = a[j]-t;
-                a[j] = a[j]+t;
+    for(int len=2; len<=n; len<<=1){
+        double ang = 2 * PI / len * (inv ? -1 : 1);
+        cd wlen(cos(ang), sin(ang));
+        for(int i=0; i<n; i+=len){
+            cd w(1);
+            for(int j=0; j<len/2; ++j){
+                cd u = a[i+j], v = a[i+j+len/2] * w;
+                a[i+j] = u + v;
+                a[i+j+len/2] = u - v;
+                w *= wlen;
             }
         }
     }
-    if(inv) for(int i=0; i<n; ++i) a[i].a /= n, a[i].b /= n;
+    if(inv){
+        for(cd &x : a) x /= n;
+    }
 }
-
+ 
 template<typename T>
 vector<T> conv(vector<T> &a, vector<T> &b){
-    int n = a.size(), m = b.size(), sz = 1;
-    while(sz < n+m-1) sz <<= 1;
-    vector<base> x(sz), y(sz), z(sz);
-    for(int i=0; i<sz; ++i){
-        x[i] = i < (int)a.size() ? base(a[i], 0) : base(0, 0);
-        y[i] = i < (int)b.size() ? base(b[i], 0) : base(0, 0);
-    }
-    fft(x), fft(y);
-    for(int i=0; i<sz; ++i) z[i] = x[i] * y[i];
-    fft(z, 1);
-    vector<T> ret(sz);
-    for(int i=0; i<sz; ++i) ret[i] = (ll)round(z[i].a);
-    while((int)ret.size() > n+m-1) ret.pop_back();
-    return ret;
+    int n = a.size(), m = b.size(), s = 1;
+    while(s < n+m-1) s <<= 1;
+    vector<cd> fa(a.begin(), a.end()), fb(b.begin(), b.end());
+    fa.resize(s); fb.resize(s);
+    fft(fa), fft(fb);
+    for(int i=0; i<s; ++i) fa[i] *= fb[i];
+    fft(fa, 1);
+    vector<T> c(n+m-1);
+    for(int i=0; i<n+m-1; ++i) c[i] = round(fa[i].real());
+    return c;
 }
