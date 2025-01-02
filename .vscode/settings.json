@@ -49,6 +49,7 @@
         "streambuf": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "iostream": "cpp"
     }
 }
